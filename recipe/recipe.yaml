@@ -1,0 +1,53 @@
+schema_version: 1
+
+context:
+  name: flatlatex
+  version: "0.15"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/flatlatex-${{ version }}.tar.gz
+  sha256: 5170e1bcd4fccb52bdbdff300b14b68730483bc46f6a2a89f7ae2bb024e4d139
+
+build:
+  number: 2
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv
+  python:
+    entry_points:
+      - flatlatex=flatlatex.bin.flatlatex:main
+
+requirements:
+  host:
+    - pip
+    - python ${{ python_min }}.*
+    - setuptools
+  run:
+    - python >=${{ python_min }}
+    - regex
+
+tests:
+  - python:
+      imports:
+        - flatlatex
+      pip_check: true
+      python_version: ${{ python_min }}
+  - requirements:
+      run:
+        - pip
+        - python ${{ python_min }}.*
+    script:
+      - flatlatex --help
+
+about:
+  summary: A LaTeX math converter to unicode text
+  license: BSD-2-Clause
+  license_file: LICENCE
+  homepage: https://github.com/jb-leger/flatlatex
+
+extra:
+  recipe-maintainers:
+    - jan-janssen
